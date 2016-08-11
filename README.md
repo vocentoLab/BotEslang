@@ -36,7 +36,7 @@ Or talk directly https://telegram.me/EslangBot :)
 
 Examples:
 
-ruby /example/bot.rb
+```ruby /example/bot.rb```
 
 ## Contributors
 
