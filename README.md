@@ -6,7 +6,6 @@ This Bot are design for Eslang.es
 
 You can see an example of CODE
 
-Examples:  
 ```
  message.reply do |reply|
     case command
