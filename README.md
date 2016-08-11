@@ -4,10 +4,10 @@ This Bot are design for Eslang.es
 
 ## Code Example
 
-* You can see an example of CODE
+You can see an example of CODE
 
 Examples:  
-
+```
  message.reply do |reply|
     case command
     when /start/i
@@ -17,7 +17,7 @@ Examples:
     else
       reply.text = "#{message.from.first_name}, lo siento, pero no hemos encontrado nada con #{command.inspect}. ¿Puedes preguntar por otro tema?. Te damos algunas pistas: política, sexo, viral, cultura, etc."
     end
-
+```
 
 ## Motivation
 
