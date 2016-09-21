@@ -5,7 +5,9 @@ require 'logger'
 require 'net/http'
 require 'json'
 
-logger = Logger.new("/NFS/logs/vlabs/botEslangTelegram/botEslangTelegram.log", Logger::DEBUG)
+t = Time.now
+logpath="/NFS/logs/vlabs/botEslangTelegram/botEslangTelegram" + t.strftime("%Y%m") + ".log"
+logger = Logger.new(logpath, Logger::DEBUG)
 
 bot = TelegramBot.new(token: 'yourTokenForTestBot', logger: logger)
 logger.debug "starting telegram bot"
@@ -149,9 +151,21 @@ bot.get_updates(fail_silently: true) do |message|
     when /Ey/i, /Hey/i, /Ey!/i, /Hey!/i, /Hi/i, /hi!/i
         reply.text = "Hola #{message.from.first_name}, ¿quieres que busque algún tema? http://gph.is/1UPcJhO"
     else
-        reply.text = "#{message.from.first_name}, lo siento, pero no hemos encontrado nada con #{command.inspect}. ¿Puedes preguntar por otro tema?. Te damos algunas pistas: política, sexo, viral, cultura, etc."
+          str = command
+          chars = str.scan(/\w+/)
+          chars.each do |char|
+            url = 'http://www.eslang.es/wp-json/bot-api/v1/tema=' + char + '/cantidad=1'
+            uri = URI(url)
+            response = Net::HTTP.get_response(URI(uri))
+            case response
+               when Net::HTTPSuccess
+                  data = JSON.parse(response.body)
+                  reply.text = "Hemos encontrado esto para ti... #{data[0]['post_url']}"
+                else
+                  reply.text = "#{message.from.first_name}, lo siento, pero no hemos encontrado nada con #{command.inspect}. ¿Puedes preguntar por otro tema?. Te damos algunas pistas: política, sexo, viral, cultura, etc."
+                end
+          end
     end
-
     logger.info "sending #{reply.text.inspect} to @#{message.from.username}"
     reply.send_with(bot)
   end
